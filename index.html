@@ -668,52 +668,39 @@
     </footer>
 
     <!-- Firebase Imports & Main Logic -->
-    <script type="module">
-     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+   <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // ==========================================
-        // YOUR FIREBASE CONFIG (ALREADY FILLED IN)
-        // ==========================================
-        const appId = 'starbucks-class-room-1';
+  const appId = 'starbucks-class-room-1';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCrFar-MuTY4fDRHl_NcRYu3BkkTteZFtQ",
-            authDomain: "antmanstarbucks.firebaseapp.com",
-            projectId: "antmanstarbucks",
-            storageBucket: "antmanstarbucks.firebasestorage.app",
-            messagingSenderId: "997118976825",
-            appId: "1:997118976825:web:4480ac2e3ac1e44f813ee8",
-            measurementId: "G-FQJCSJWHFR"
-        };
-        // ==========================================
+  const firebaseConfig = {
+      apiKey: "AIzaSyCrFar-MuTY4fDRHl_NcRYu3BkkTteZFtQ",
+      authDomain: "antmanstarbucks.firebaseapp.com",
+      projectId: "antmanstarbucks",
+      storageBucket: "antmanstarbucks.firebasestorage.app",
+      messagingSenderId: "997118976825",
+      appId: "1:997118976825:web:4480ac2e3ac1e44f813ee8",
+      measurementId: "G-FQJCSJWHFR"
+  };
 
-        let db = null;
-        let auth = null;
-        let currentUser = null;
-        let isFirestoreDisabled = false;
+  let db = null;
+  let auth = null;
+  let currentUser = null;
+  let isFirestoreDisabled = false;
 
-        const TEAMS = ['1', '2', '3', '4', '5', '7', '8', 'Prof Jomay'];
-        
-        // Global Firebase handles
-        let db = null;
-        let auth = null;
-        let currentUser = null;
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default_starbucks_sim';
+  const TEAMS = ['1', '2', '3', '4', '5', '7', '8', 'Prof Jomay'];
+  const PRESENTER_PASSCODE = 'STARBUCKS2026';
+  let isPresenterUnlocked = false;
 
-        // APP CONSTANTS & TEAMS DEFINITION
-        const TEAMS = ['1', '2', '3', '4', '5', '7', '8', 'Prof Jomay'];
-        const PRESENTER_PASSCODE = 'STARBUCKS2026';
-        let isPresenterUnlocked = false;
-
-        const DEFAULT_SCORES = {
-            cx: 25, // Customer Experience
-            ew: 25, // Employee Wellbeing
-            bp: 25, // Business Performance
-            bt: 25  // Brand Trust
-        };
-
+  const DEFAULT_SCORES = {
+      cx: 25,
+      ew: 25,
+      bp: 25,
+      bt: 25
+  };
+     
         // Default Scenarios
         const INITIAL_SCENARIOS = [
             {
