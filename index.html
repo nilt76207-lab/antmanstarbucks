@@ -669,10 +669,33 @@
 
     <!-- Firebase Imports & Main Logic -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // ==========================================
+        // YOUR FIREBASE CONFIG (ALREADY FILLED IN)
+        // ==========================================
+        const appId = 'starbucks-class-room-1';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrFar-MuTY4fDRHl_NcRYu3BkkTteZFtQ",
+            authDomain: "antmanstarbucks.firebaseapp.com",
+            projectId: "antmanstarbucks",
+            storageBucket: "antmanstarbucks.firebasestorage.app",
+            messagingSenderId: "997118976825",
+            appId: "1:997118976825:web:4480ac2e3ac1e44f813ee8",
+            measurementId: "G-FQJCSJWHFR"
+        };
+        // ==========================================
+
+        let db = null;
+        let auth = null;
+        let currentUser = null;
+        let isFirestoreDisabled = false;
+
+        const TEAMS = ['1', '2', '3', '4', '5', '7', '8', 'Prof Jomay'];
+        
         // Global Firebase handles
         let db = null;
         let auth = null;
@@ -1130,31 +1153,18 @@
             renderAdminEditor();
             renderPresenterMatrix();
 
-            // Setup Firebase with permission-denied fallback
+            // Setup Firebase
             try {
-                if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                    const firebaseConfig = JSON.parse(__firebase_config);
-                    const app = initializeApp(firebaseConfig);
-                    auth = getAuth(app);
-                    db = getFirestore(app);
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
 
-                    try {
-                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                            await signInWithCustomToken(auth, __initial_auth_token);
-                        } else {
-                            await signInAnonymously(auth);
-                        }
-                        currentUser = auth.currentUser;
-                    } catch (authErr) {
-                        console.warn('Firebase Auth fallback:', authErr);
-                    }
+                await signInAnonymously(auth);
+                currentUser = auth.currentUser;
 
-                    subscribeToRealtimeSync();
-                } else {
-                    updateSyncBadge('Local Mode', 'amber');
-                }
+                subscribeToRealtimeSync();
             } catch (err) {
-                console.warn('Firebase initialized in local fallback mode:', err);
+                console.warn('Firebase init failed, falling back to local mode:', err);
                 isFirestoreDisabled = true;
                 updateSyncBadge('Local Mode', 'amber');
             }
